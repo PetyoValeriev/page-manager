@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= page.title
+  p= page.meta_description
+  div!= page.content
+  a(href='/pages')
+      button.btn.btn-primary(type='button') Back

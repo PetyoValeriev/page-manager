@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  h1 All Pages
+  if pages && pages.length
+    table
+      thead
+        tr
+          th Title
+          th Metadata 
+          th Content
+          th Slug
+          th Actions
+      tbody
+        each page in pages
+          tr
+            td= page.title
+            td= page.meta_description
+            td= page.content
+            td= page.slug
+            td
+              form(method='post' action='/delete-page')
+                input(type='hidden' name='id' value=page.id)
+                button.btn.btn-danger(type='submit') Delete
+              form(method='post' action='/pages')
+                input(type='hidden' name='id' value=page.id)
+                a.btn.btn-primary(href=`/pages/${page.id}`) Show 
+  else
+    p No pages found.
+  
+  hr
+
+  h2 Create Page
+  <br>
+    form(id='create-page-form' method='post' action='/create')
+      .form-group
+        label(for='title') Title:
+        input#title.form-control(type='text' name='title' required)
+        span#title-error.invalid-feedback
+      .form-group
+        label(for='meta_description') Meta Description:
+        input#meta_description.form-control(type='text' name='meta_description' required)
+        span#meta-description-error.invalid-feedback
+      .form-group
+        label(for='content') Content:
+        textarea#content.form-control(name='content' rows='5' required)
+        span#content-error.invalid-feedback
+      .form-group
+        label(for='slug') Slug:
+        input#slug.form-control(type='text' name='slug' required)
+        span#slug-error.invalid-feedback
+      button.btn.btn-primary(type='submit') Create Page
+      a(href='/admin')
+        button.btn.btn-primary(type='button') Back
+

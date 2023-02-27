@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title= title 
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css")
+
+    
+  body
+    block content
+        .reg-box
+            .regForm
+                h2 Registration
+                form(action="/auth_reg" method="post" id ="regForm" class="regFrom" )
+                    .form-group
+                        label(for="fullname") Fullname
+                        input(type="text" name="fullname" class="form-control")
+                    .form-group
+                        label(for="email") Email
+                        input(type="email" name="email" class="form-control")
+                    .form-group
+                        label(for="password") Password
+                        input(type="password" name="password" class="form-control")
+                    .form-group
+                        label(for="cpassword") Confirm Password
+                        input(type="password" name="cpassword" class="form-control")
+                    
+                    button(type="submit" class="btn btn-primary") Submit
+
+                    a(href='/admin')
+                        button.btn.btn-primary(type='button') Back
+                    
+    script
+      include validator.js
