@@ -5,7 +5,6 @@ let logger = require('morgan');
 let path = require('path');
 let createError = require('http-errors');
 let adminRouter = require('./routes/admin')
-
 let app = express();
 
 app.use(session({
@@ -26,6 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //admin panel router
 app.use('/', adminRouter);
+app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
