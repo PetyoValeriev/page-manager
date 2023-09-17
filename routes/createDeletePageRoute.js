@@ -1,15 +1,12 @@
-// Import Express using ES modules syntax
 import express from 'express';
-import { authenticateJWT } from '../middlewares/authenticateJWT.js';
-import { getPages, getPageByID, renderPageBySlug, renderNewPage, deletePage } from '../controllers/createDeletePageController.js';
+import { getAllPages, createPage, deletePage, getPageBySlug } from '../controllers/createDeletePageController.mjs'
 
 const router = express.Router();
 
-// Define your routes in the correct order
-router.get('/pages', getPages);
-router.get('/new-page', authenticateJWT, renderNewPage);
-router.get('/:slug', authenticateJWT, renderPageBySlug);
-router.get('/pages/:id', getPageByID);
-router.post('/delete-page', deletePage);
+router.get('/', getAllPages);
+router.get('/:slug', getPageBySlug);
+router.post('/create', createPage);
+router.delete('/:slug', deletePage);
+
 
 export default router;

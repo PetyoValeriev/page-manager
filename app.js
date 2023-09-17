@@ -8,7 +8,9 @@ import createError from 'http-errors';
 import adminRouter from './routes/adminRoute.js'; // Update the import path
 import { authRouter, registerUserMiddleware } from './controllers/authController.js'; // Import authRouter and registerUserMiddleware as named imports
 import { loginUser } from './controllers/loginController.js'; // Import loginUser as a named import
-import pagesRoute from './routes/createDeletePageRoute.js'; // Import pagesRouter
+import pagesRoutes from '../page-manager/routes/createDeletePageRoute.js';
+import { connectToDatabase } from './database/db.mjs';
+
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,6 +19,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// Connect to the database
+await connectToDatabase();
+app.use('/pages', pagesRoutes);
 
 app.use(
   session({
@@ -40,47 +46,7 @@ app.use('/', adminRouter);
 app.use('/admin', adminRouter);
 app.use('/auth_reg', registerUserMiddleware); // Use registerUserMiddleware for registration
 app.post('/auth_login', loginUser); // Use POST method for login
-app.get('/pages', pagesRoute);
 // Other route definitions...
-
-
-
-
-
-
-
-// // Define a route handler for '/pages'
-// app.get('/pages', async (req, res) => {
-//   try {
-//     // Use an async function to await the result of the query
-//     const [rows] = await pool.query('SELECT * FROM pages');
-    
-//     // Assuming 'rows' contains the rows retrieved from the database
-//     const pages = rows;
-
-//     // Render a view with the retrieved pages data
-//     res.render('pages', { pages });
-//   } catch (error) {
-//     // Handle errors (e.g., database connection error or query error)
-//     console.error('Error fetching pages:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.use((req, res, next) => {
   next(createError(404));
@@ -92,9 +58,21 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
+// Handle other errors
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.render('error'); // You can customize this based on your error handling needs
+});
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+process.on('SIGINT', () => {
+  closeDatabase();
+  process.exit();
 });
 
 export default app;

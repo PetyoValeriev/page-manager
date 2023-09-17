@@ -7,7 +7,7 @@ block content
       thead
         tr
           th Title
-          th Metadata 
+          th Metadata
           th Content
           th Slug
           th Actions
@@ -19,20 +19,17 @@ block content
             td= page.content
             td= page.slug
             td
-              form(method='post' action='/delete-page')
-                input(type='hidden' name='id' value=page.id)
-                button.btn.btn-danger(type='submit') Delete
-              form(method='post' action='/pages')
-                input(type='hidden' name='id' value=page.id)
-                a.btn.btn-primary(href=`/pages/${page.id}`) Show 
+                button.btn.btn-danger(type='button' onclick=`deletePage("${page.slug}")`) Delete
+
+                a.btn.btn-primary(href=`/pages/${page.slug}`) Show
   else
     p No pages found.
-  
+
   hr
 
   h2 Create Page
   <br>
-    form(id='create-page-form' method='post' action='/create')
+    form(id='create-page-form', method='post', action='/pages/create')
       .form-group
         label(for='title') Title:
         input#title.form-control(type='text' name='title' required)
@@ -52,4 +49,21 @@ block content
       button.btn.btn-primary(type='submit') Create Page
       a(href='/admin')
         button.btn.btn-primary(type='button') Back
+    script.
+      async function deletePage(slug) {
+        try {
+          const response = await fetch(`/pages/${slug}`, {
+            method: 'DELETE',
+          });
 
+          if (response.ok) {
+            // Page deleted successfully, you can handle it here
+            location.reload(); // Refresh the page or update the UI
+          } else {
+            // Handle errors here
+            console.error('Failed to delete page:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
