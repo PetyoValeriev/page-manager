@@ -1,20 +1,31 @@
-let express = require('express');
-let session = require('express-session');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
-let path = require('path');
-let createError = require('http-errors');
-let adminRouter = require('./routes/admin')
-let app = express();
+import express from 'express';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import createError from 'http-errors';
+import adminRouter from './routes/adminRoute.js'; // Update the import path
+import { authRouter, registerUserMiddleware } from './controllers/authController.js'; // Import authRouter and registerUserMiddleware as named imports
+import { loginUser } from './controllers/loginController.js'; // Import loginUser as a named import
+import pagesRoute from './routes/createDeletePageRoute.js'; // Import pagesRouter
+import dotenv from 'dotenv';
 
-app.use(session({
-  secret : 'ABCDefg',
-  resave : false,
-  saveUninitialized : true
-}));
+dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// view engine setup
+const app = express();
+
+app.use(
+  session({
+    secret: 'ABCDefg',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -23,30 +34,67 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//admin panel router
+
+
 app.use('/', adminRouter);
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use('/admin', adminRouter);
+app.use('/auth_reg', registerUserMiddleware); // Use registerUserMiddleware for registration
+app.post('/auth_login', loginUser); // Use POST method for login
+app.get('/pages', pagesRoute);
+// Other route definitions...
 
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+
+
+
+
+
+// // Define a route handler for '/pages'
+// app.get('/pages', async (req, res) => {
+//   try {
+//     // Use an async function to await the result of the query
+//     const [rows] = await pool.query('SELECT * FROM pages');
+    
+//     // Assuming 'rows' contains the rows retrieved from the database
+//     const pages = rows;
+
+//     // Render a view with the retrieved pages data
+//     res.render('pages', { pages });
+//   } catch (error) {
+//     // Handle errors (e.g., database connection error or query error)
+//     console.error('Error fetching pages:', error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.use((req, res, next) => {
   next(createError(404));
 });
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
-//Create Server
-app.listen(3000, () => {
-  console.log('Listening on port 3000...');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
 
-module.exports = app;
+export default app;

@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const pgPool = new Pool({
   user: 'petyo',
   host: 'localhost', // Change to your PostgreSQL host if different
-  database: 'jwtTable',
+  database: 'jwttabl',
   password: 'tatatayan',
   port: 5432, // Change to your PostgreSQL port if different
 });
