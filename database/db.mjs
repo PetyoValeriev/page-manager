@@ -19,4 +19,8 @@ export const closeDatabase = () => {
   mongoose.connection.close(() => {
     console.log('Disconnected from MongoDB');
   });
+  process.on('SIGINT', () => {
+    closeDatabase();
+    process.exit();
+  });
 };

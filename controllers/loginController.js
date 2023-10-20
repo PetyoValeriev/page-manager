@@ -2,25 +2,29 @@
 import bcrypt from 'bcrypt';
 import { generateToken } from '../middlewares/authenticateJWT.js';
 import mysqlPool from '../database/connection.js'; // Add .js extensionclear
+
 // Function to perform user login
 async function loginUser(req, res) {
   const { email, password } = req.body;
 
   try {
     // Perform user authentication here (check email and password)
+    console.log('Email:', email); // Add this line
     const user = await getUserByEmail(email);
 
     if (user) {
       // Check if the provided password matches the stored hashed password
       const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log('isPasswordValid:', isPasswordValid); // Add this line
 
       if (isPasswordValid) {
         // Passwords match, generate a JWT token
         const token = generateToken(user);
-
+      
         // Set the token as a cookie
         res.cookie('jwt', token, { httpOnly: true });
-
+        console.log('JWT Token:', token); // Add this line
+      
         // Redirect to the admin page upon successful login
         return res.redirect('/admin');
       }
@@ -37,6 +41,10 @@ async function loginUser(req, res) {
 
 // Function to retrieve user by email from MySQL database
 async function getUserByEmail(email) {
+  if (!email) {
+    return null; // Handle the case where email is missing or empty
+  }
+
   try {
     const [rows] = await mysqlPool.execute('SELECT * FROM users WHERE email = ?', [email]);
     if (rows.length === 1) {

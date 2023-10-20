@@ -16,6 +16,16 @@ export async function getAllPages(req, res) {
 export async function createPage(req, res) {
   try {
     const pageData = req.body;
+
+    // Log the received request body for debugging
+    console.log('Request Body:', pageData);
+
+    // Check if 'slug' property exists in pageData
+    if (!pageData || !pageData.slug) {
+      console.log('Slug is missing');
+      return res.status(400).send('Slug is missing');
+    }
+
     const slug = slugify(pageData.slug, { lower: true }); // Generate slug
     pageData.slug = slug; // Add slug to pageData
     const page = new Page(pageData);

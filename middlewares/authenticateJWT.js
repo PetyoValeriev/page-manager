@@ -16,6 +16,7 @@ function authenticateJWT(req, res, next) {
   if (token) {
     jwt.verify(token, secretKey, (err, user) => {
       if (err) {
+        console.error('JWT Verification Error:', err);
         return res.sendStatus(403); // Forbidden if the token is invalid
       }
 
@@ -23,8 +24,10 @@ function authenticateJWT(req, res, next) {
       next(); // Continue with the next middleware
     });
   } else {
+    console.error('No JWT Token Found');
     res.sendStatus(401); // Unauthorized if no token is found
   }
 }
+
 
 export { generateToken, authenticateJWT };

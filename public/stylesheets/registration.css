@@ -1,0 +1,66 @@
+.reg-box {
+    margin: auto;
+    width: 500px;
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    background-color: #fff;
+  }
+  
+  .regForm {
+    padding-top: 20px;
+  }
+  
+  .regForm h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-control {
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  }
+  
+  .form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+  
+  .btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+  }
+  
+  .btn-primary:hover,
+  .btn-primary:focus,
+  .btn-primary.active,
+  .btn-primary.disabled,
+  .btn-primary[disabled] {
+    color: #fff;
+    background-color: #2e6da4;
+    border-color: #2c6288;
+  }
+  
+  a {
+    color: #337ab7;
+    text-decoration: none;
+  }
+  
+  a:hover,
+  a:focus {
+    color: #2e6da4;
+    text-decoration: underline;
+  }
+  

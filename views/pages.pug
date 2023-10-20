@@ -19,9 +19,9 @@ block content
             td= page.content
             td= page.slug
             td
-                button.btn.btn-danger(type='button' onclick=`deletePage("${page.slug}")`) Delete
-
-                a.btn.btn-primary(href=`/pages/${page.slug}`) Show
+                button.btn.delete-button(type='button' onclick=`deletePage("${page.slug}")`) Delete
+                a(href=`/pages/${page.slug}`)
+                  button.btn.show-button Show
   else
     p No pages found.
 
@@ -29,7 +29,7 @@ block content
 
   h2 Create Page
   <br>
-    form(id='create-page-form', method='post', action='/pages/create')
+    form(id='create-page-form', method='post', action=`/pages/create`)
       .form-group
         label(for='title') Title:
         input#title.form-control(type='text' name='title' required)
@@ -44,11 +44,13 @@ block content
         span#content-error.invalid-feedback
       .form-group
         label(for='slug') Slug:
-        input#slug.form-control(type='text' name='slug' required)
-        span#slug-error.invalid-feedback
+        input#slug.form-control(type='text' name='slug' required) 
+        span#slug-error.invalid-feedback 
+
       button.btn.btn-primary(type='submit') Create Page
-      a(href='/admin')
-        button.btn.btn-primary(type='button') Back
+      button.btn.btn-primary
+        a(href='/admin') Back
+
     script.
       async function deletePage(slug) {
         try {
@@ -67,3 +69,6 @@ block content
           console.error('Error:', error);
         }
       }
+      
+    link(rel='stylesheet', href='/stylesheets/pages.css')
+      

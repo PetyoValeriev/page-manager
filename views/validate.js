@@ -1,5 +1,5 @@
 
-// Validation for create-page-form
+// Select the form and its input fields
 const form = document.querySelector('#create-page-form');
 
 const fields = [
@@ -22,17 +22,19 @@ const fields = [
     errorMsg: 'Content must be at least 50 characters long',
   },
   {
-    input: document.querySelector('#slug'),
+    input: document.querySelector('#slug'), // Add the Slug field here
     error: document.querySelector('#slug-error'),
     pattern: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
     errorMsg: 'Slug must be in lowercase alphanumeric characters separated by hyphens',
   },
 ];
 
-form.addEventListener('submit', (event) => {
+// Add an event listener for form submission
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   let hasError = false;
 
+  // Validation logic for each field
   fields.forEach((field) => {
     const { input, error, minLen, pattern, errorMsg } = field;
     const value = input.value.trim();
@@ -47,44 +49,24 @@ form.addEventListener('submit', (event) => {
     }
   });
 
+  // If there are no errors, capture and log the form data
   if (!hasError) {
+    const formData = new FormData(form);
+    for (const [name, value] of formData.entries()) {
+      console.log(`${name}: ${value}`);
+    }
+
+    // Use a promise-based approach to wait for logging before submitting the form
+    await new Promise((resolve) => {
+      // Add a delay (e.g., 1 second) to ensure the log is captured
+      setTimeout(() => {
+        resolve();
+      }, 1000); // Adjust the delay as needed
+
+      // You can remove the delay in a production environment
+    });
+
+    // Now, submit the form
     form.submit();
   }
 });
-
-// Validation for regForm
-const regForm = document.getElementById('regForm');
-const fullNameInput = regForm.querySelector('input[name="fullname"]');
-const emailInput = regForm.querySelector('input[name="email"]');
-const passwordInput = regForm.querySelector('input[name="password"]');
-const cpasswordInput = regForm.querySelector('input[name="cpassword"]');
-
-regForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const fields = [
-    { input: fullNameInput, errorMsg: 'Please enter your full name' },
-    { input: emailInput, errorMsg: 'Please enter a valid email' },
-    { input: passwordInput, errorMsg: 'Password must be at least 6 characters long' },
-    { input: cpasswordInput, errorMsg: 'Passwords do not match' },
-  ];
-
-  fields.forEach((field) => {
-    const { input, errorMsg } = field;
-    const value = input.value.trim();
-
-    if (value === '' || (input === emailInput && !isValidEmail(value)) || (input === passwordInput && value.length < 6) || (input === cpasswordInput && value !== passwordInput.value.trim())) {
-      // Display error message for the respective field
-      return;
-    }
-  });
-
-  // Submit regForm if all fields are valid
-  regForm.submit();
-});
-
-function isValidEmail(email) {
-  // Regular expression for email validation
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return emailRegex.test(email);
-}
